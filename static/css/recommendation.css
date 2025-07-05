@@ -1,0 +1,87 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 20px;
+}
+
+.recommendation-box {
+    width: 80%;
+    margin: auto;
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+#recommendation-table thead {
+    position: sticky;
+    top: 0;
+    background: #f8f9fa; /* Light background to differentiate from body */
+    z-index: 10;
+}
+
+.table-title {
+    text-align: center;
+    font-size: 22px;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+}
+
+.table-responsive {
+    max-height: 350px; /* Adjust as needed */
+    overflow-y: auto; /* Enables vertical scrolling */
+    border: 1px solid #ddd; /* Optional: Adds a border for clarity */
+}
+
+.table th, .table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: center;
+}
+
+.table th {
+    background-color: #222222;
+    color: white;
+}
+
+.table td {
+    font-size: 16px;
+}
+
+.table td[style] {
+    font-weight: bold;
+}
+
+.buy-text { color: #10b981; font-weight: bold; } /* Green for Buy */
+.sell-text { color: #ef4444; font-weight: bold; } /* Red for Sell */
+.scrollable-table { max-height: 400px; overflow-y: auto; display: block; } /* Fixed height */
+.strong-buy { color: #008000; font-weight: bold; }  /* Dark Green */
+.buy { color: #34c38f; font-weight: bold; }          /* Light Green */
+.weak-buy { color: #7dcf94; font-weight: bold; }     /* Pale Green */
+.hold { color: #ffc107; font-weight: bold; }         /* Yellow */
+.weak-sell { color: #ff8c00; font-weight: bold; }    /* Orange */
+.sell { color: #f46a6a; font-weight: bold; }         /* Light Red */
+.strong-sell { color: #ff0000; font-weight: bold; }  /* Dark Red */
+.watchlist { color: #007bff; font-weight: bold; }    /* Blue */
+.volatile { color: #8a2be2; font-weight: bold; }     /* Purple */
+.details-btn {
+    background: #556ee6;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: bold;
+    display: inline-block;
+} 
+.table td, .table th {
+    vertical-align: middle;
+    text-align: center;
+}

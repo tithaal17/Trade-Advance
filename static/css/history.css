@@ -1,0 +1,92 @@
+
+
+.profit_loss-graph {
+    width: 80%;
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background: #fff;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+}
+
+.chart-controls {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+select, button {
+    padding: 8px 12px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+select {
+    background: #fff;
+}
+
+button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+}
+
+button:hover {
+    background-color: #0056b3;
+    color: white;
+}
+
+.transaction-box {
+    width: 90%;
+    max-width: 1000px;
+    margin: auto;
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    overflow-y: auto;
+    max-height: 300px;
+}
+
+.transaction-table tbody td {
+    text-align: center;
+    padding: 12px;
+    border-bottom: 1px solid #dee2e6;
+}
+
+th, td {
+    padding: 10px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    text-align: center;
+    background-color: #f8f9fa;
+    font-weight: bold;
+}
+
+.profit-loss.positive {
+    color: #34c38f;
+}
+
+.profit-loss.negative {
+    color: #f46a6a;
+}
+
+.details-btn {
+    background: #556ee6;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: bold;
+    display: inline-block;
+}
+
+

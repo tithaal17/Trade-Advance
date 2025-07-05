@@ -1,0 +1,82 @@
+/* General Styling */
+body {
+    font-family: "Poppins", sans-serif;
+    background-color: #f8f9fa;
+    margin: 0;
+    padding: 0;
+}
+
+/* Center the Trading Card */
+.trade-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* Align card towards the top */
+    height: 90vh;  /* Reduce height */
+    padding-top: 30px; /* Adjust if needed */
+}
+
+/* Trading Card */
+.card {
+    background: white;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    width: 500px;
+}
+
+.header {
+    text-align: center;
+    font-size: 20px;
+    margin-bottom: 50px;
+}
+
+/* Input Fields */
+.field {
+    margin-bottom: 15px;
+}
+
+.field label {
+    font-weight: bold;
+}
+
+input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+/* Button Group */
+.button-group {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 15px;
+}
+
+.buy-btn, .sell-btn {
+    width: 48%;
+    padding: 10px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.buy-btn {
+    background-color: #28a745;
+    color: white;
+}
+
+.sell-btn {
+    background-color: #dc3545;
+    color: white;
+}
+
+.buy-btn:hover {
+    background-color: #218838;
+}
+
+.sell-btn:hover {
+    background-color: #c82333;
+}

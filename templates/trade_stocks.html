@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.5.0/dist/semantic.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.5.0/dist/semantic.min.js"></script>
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../static/css/trade_stocks.css">
+    <link rel="stylesheet" href="../static/css/dashboard.css">
+     <!-- External CSS -->
+    
+    <!-- Bootstrap Css -->
+    <link href="../static/css/bootstrap.min.css" id="bootstrap-style" rel="stylesheet" type="text/css" />
+    <!-- Icons Css -->
+    <link href="../static/css/icons.min.css" rel="stylesheet" type="text/css" />
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.js"></script>
+    <!-- ApexCharts CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
+    <!-- jQuery (Required for Bootstrap Tabs) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Bootstrap JS (Required for Tabs) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+
+
+    <title>stocks</title>
+</head>
+<body>
+    {% include 'navbar.html' %}
+
+<br>
+      <div class="ui container">
+    <div class="trade-container">
+        <div class="card">
+            <h2 class="header">Buy / Sell Stocks</h2>
+
+            <form class="ui form" id="trade-form">
+                <div class="field">
+                    <label>Stock Symbol</label>
+                    <input type="text" id="symbol" name="symbol" placeholder="Enter Stock Symbol (e.g. AAPL)">
+                </div>
+
+                <div class="field">
+                    <label>Shares</label>
+                    <input type="number" id="shares" name="shares" min="1" placeholder="Enter number of shares">
+                </div>
+
+                <div class="field">
+                    <label>Price Per Share ($)</label>
+                    <input type="text" id="price" name="price" readonly placeholder="Fetching price...">
+                </div>
+
+                <div class="button-group">
+                    <button type="button" class="buy-btn" id="buy-btn">Buy</button>
+                    <button type="button" class="sell-btn" id="sell-btn">Sell</button>
+                </div>
+
+                <div class="ui error message" id="error-message" style="display: none;"></div>
+                <div class="ui success message" id="success-message" style="display: none;"></div>
+            </form>
+        </div>
+    </div>
+
+    <script src="/static/js/trade_stocks.js"></script> <!-- Correct JS Path -->
+</div>
+</body>
+</html>

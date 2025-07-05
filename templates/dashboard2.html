@@ -1,0 +1,122 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-6 col-xl-3">
+        <div class="portfolio-box">
+            <div class="portfolio-content">
+                <div class="float-right mt-2">
+                    <div id="total-investment-chart"></div>
+                </div>
+                <div>
+                    <h4 class="mb-1 mt-1">$ <span>{{ "%.2f"|format(cashBalance) }}</span></h4>
+                    <p class="text-muted mb-0">Cash Balance</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-xl-3">
+        <div class="portfolio-box">
+            <div class="portfolio-content">
+                <div class="float-right mt-2">
+                    <div id="current-value-chart"></div>
+                </div>
+                <div>
+                    <h4 class="mb-1 mt-1">$ <span id="current-value">{{ "%.2f"|format(totalPortfolioValue) }}</span></h4>
+                    <p class="text-muted mb-0">Total Portfolio Value</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-xl-3">
+        <div class="portfolio-box">
+            <div class="portfolio-content">
+                <div class="float-right mt-2">
+                    <div id="pnl-chart"></div>
+                </div>
+                <div>
+                    <h4 class="mb-1 mt-1" style="color:#34c38f;" id="unrealized-pnl">
+                        <span>{{ "%.2f"|format(totalInvestment) }}</span>
+                    </h4>
+                </div>
+                <p class="text-muted mb-0">Total Investment</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-xl-3">
+        <div class="portfolio-box">
+            <div class="portfolio-content">
+                <div class="float-right mt-2">
+                    <div id="growth-chart"></div>
+                </div>
+                <div>
+                    <h4 class="mb-1 mt-1" style="color:#34c38f;" id="growth">
+                        <span>{{ "%.2f"|format(MarketValue) }}</span> %
+                    </h4>
+                </div>
+                <p class="text-muted mb-0">Current Market Value</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Holdings Table -->
+<div class="row">
+    <div class="col-lg-12">
+        <div class="holdings-box">
+            <div class="holdings-content">
+                <div>
+                    <h4 class="table-title">Your Holdings
+                        <a href="/trade_stocks" class="btn btn-primary btn-sm btn-rounded float-right">
+                            <i class="fa fa-plus"></i> &nbsp;Trade Stocks
+                        </a>
+                    </h4>
+                </div>
+                    <br>
+                <table class="table table-hover holdings-table">
+                    <thead>
+                        <tr>
+                            <th>Ticker</th>
+                            <th>Company Name</th>
+                            <th>Number of Shares</th>
+                            <th>Average Cost</th>
+                            <th>Last Trading Price (LTP)</th>
+                            <th>Invested Amount</th>
+                            <th>P&L</th>
+                            <th>Net Change</th>
+                            <th>Details</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for c in holdings %}
+                        <tr>
+                            <td class="company-name">{{ c.CompanySymbol }}</td>
+                            <td class="company-name">{{ c.CompanyName }}</td>
+                            <td>{{ c.NumberShares }}</td>
+                            <td>$ {{ "%.2f"|format(c.AverageCost) }}</td>
+                            <td>$ {{ "%.2f"|format(c.MarketValue / c.NumberShares if c.NumberShares > 0 else 0) }}</td>
+                            <td>$ {{ "%.2f"|format(c.InvestmentAmount) }}</td>
+                            <td class="pnl" 
+                                style="color: {% if c.UnrealizedPNL >= 0 %}#34c38f{% else %}#f46a6a{% endif %};">
+                                {% if c.UnrealizedPNL >= 0 %}+{% endif %}$ {{ "%.2f"|format(c.UnrealizedPNL) }}
+                            </td>
+                            <td class="net-change" 
+                                style="color: {% if c.UnrealizedPNLPercent >= 0 %}#34c38f{% else %}#f46a6a{% endif %};">
+                                {% if c.UnrealizedPNLPercent >= 0 %}+{% endif %}{{ "%.2f"|format(c.UnrealizedPNLPercent) }} %
+                            </td>
+                            <td>
+                                <a href="/holding_details/{{ c.CompanyName }}" class="details-btn">View Details</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="../static/libs/apexcharts/apexcharts.min.js"></script>
+<script src="../static/js/pages/dashboard.init.js"></script>
+
+{% endblock %}

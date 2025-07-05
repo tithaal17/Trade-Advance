@@ -1,0 +1,17 @@
+# Ignore virtual environment
+venv/
+
+# Ignore system files
+__pycache__/
+*.pyc
+
+# Ignore VSCode/IDE settings (optional)
+.vscode/
+.idea/
+
+# Ignore environment/config files
+config.py
+
+# Ignore database files
+trading.db
+

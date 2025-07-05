@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.5.0/dist/semantic.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.5.0/dist/semantic.min.js"></script>
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="../static/css/recommendation.css">
+     <!-- External CSS -->
+    
+    <!-- Bootstrap Css -->
+    <link href="../static/css/bootstrap.min.css" id="bootstrap-style" rel="stylesheet" type="text/css" />
+    <!-- Icons Css -->
+    <link href="../static/css/icons.min.css" rel="stylesheet" type="text/css" />
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.js"></script>
+    <!-- ApexCharts CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
+    <!-- jQuery (Required for Bootstrap Tabs) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Bootstrap JS (Required for Tabs) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+
+
+    <title>Stock Recommendations</title>
+
+    <style>
+        .strong-buy { color: #008000; font-weight: bold; }  /* Dark Green */
+        .buy { color: #34c38f; font-weight: bold; }          /* Light Green */
+        .weak-buy { color: #7dcf94; font-weight: bold; }     /* Pale Green */
+        .hold { color: #ffc107; font-weight: bold; }         /* Yellow */
+        .weak-sell { color: #ff8c00; font-weight: bold; }    /* Orange */
+        .sell { color: #f46a6a; font-weight: bold; }         /* Light Red */
+        .strong-sell { color: #ff0000; font-weight: bold; }  /* Dark Red */
+        .watchlist { color: #007bff; font-weight: bold; }    /* Blue */
+        .volatile { color: #8a2be2; font-weight: bold; }     /* Purple */
+    </style>
+
+</head>
+<body style="text-align: center; ">
+
+    {% include 'navbar.html' %}
+<br>
+
+    <div class="ui container mt-4">
+        <h2 class="text-center mb-4">Stock Recommendations</h2>
+
+        <!-- Filter Buttons -->
+        <div class="text-center mb-3">
+            <button class="btn btn-dark filter-btn" data-filter="All">Show All</button>
+            <button class="btn btn-success filter-btn" data-filter="Strong Buy">Strong Buy</button>
+            <button class="btn btn-success filter-btn" data-filter="Buy">Buy</button>
+            <button class="btn btn-success filter-btn" data-filter="Weak Buy">Weak Buy</button>
+            <button class="btn btn-warning filter-btn" data-filter="Hold">Hold</button>
+            <button class="btn btn-danger filter-btn" data-filter="Weak Sell">Weak Sell</button>
+            <button class="btn btn-danger filter-btn" data-filter="Sell">Sell</button>
+            <button class="btn btn-danger filter-btn" data-filter="Strong Sell">Strong Sell</button>
+            <button class="btn btn-primary filter-btn" data-filter="Watchlist">Watchlist</button>
+            <button class="btn btn-secondary filter-btn" data-filter="Volatile">Volatile</button>
+        </div>
+
+        <!-- Recommendation Table -->
+        <div class="table-responsive">
+            <table class="table table-striped" id="recommendation-table">
+                <thead class="bg-gray-500">
+                    <tr>
+                        <th style="font-size: medium;"><b>Symbol</b></th>
+                        <th style="font-size: medium;"><b>Latest Price</b></th>
+                        <th style="font-size: medium;"><b>Recommendation</b></th>
+                    </tr>
+                </thead>
+                <tbody id="recommendation-body">
+                    {% for stock in recommendations %}
+                    <tr class="recommendation-row" data-recommendation="{{ stock.recommendation }}">
+                        <td>{{ stock.symbol }}</td>
+                        <td>$ {{ "%.2f"|format(stock.close) }}</td>
+                        <td class="{{ stock.recommendation | lower | replace(' ', '-') }}">
+                            {{ stock.recommendation }}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            const $rows = $(".recommendation-row"); // Cache rows for fast filtering
+
+            $(".filter-btn").on("click", function () {
+                let filter = $(this).attr("data-filter");
+
+                if (filter === "All") {
+                    $rows.show(); // Show all rows
+                } else {
+                    $rows.hide().filter(function () {
+                        return $(this).data("recommendation") === filter;
+                    }).show();
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>
+
+</body>
+</html>

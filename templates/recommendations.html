@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Recommendations</title>
+
+    <!-- Stylesheets -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../static/css/recommendation.css">
+    
+
+    <style>
+       
+    </style>
+
+</head>
+<body>
+
+    {% include 'navbar.html' %}
+
+    <br>
+    <div class="container">
+        <h1 class="text-3xl font-bold mb-6">Stock Recommendations</h1>
+
+        <!-- Tab Navigation -->
+        <ul class="nav nav-tabs" id="recommendationTabs">
+            <li class="nav-item">
+                <a class="nav-link active" id="long-term-tab" data-bs-toggle="tab" href="#long-term"><b>Long-Term</a></b>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="short-term-tab" data-bs-toggle="tab" href="#short-term"><b>Short-Term</b></a>
+            </li>
+        </ul>
+
+        <div class="tab-content mt-4">
+            <!-- Long-Term Recommendations Tab -->
+            <div class="tab-pane fade show active" id="long-term">
+                <div class="text-center mb-3">
+                    <button class="btn btn-dark filter-btn" data-filter="All">Show All</button>
+                    <button class="btn btn-success filter-btn" data-filter="Strong Buy">Strong Buy</button>
+                    <button class="btn btn-success filter-btn" data-filter="Buy">Buy</button>
+                    <button class="btn btn-success filter-btn" data-filter="Weak Buy">Weak Buy</button>
+                    <button class="btn btn-warning filter-btn" data-filter="Hold">Hold</button>
+                    <button class="btn btn-danger filter-btn" data-filter="Weak Sell">Weak Sell</button>
+                    <button class="btn btn-danger filter-btn" data-filter="Sell">Sell</button>
+                    <button class="btn btn-danger filter-btn" data-filter="Strong Sell">Strong Sell</button>
+                    <button class="btn btn-primary filter-btn" data-filter="Watchlist">Watchlist</button>
+                    <button class="btn btn-secondary filter-btn" data-filter="Volatile">Volatile</button>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-striped" id="long-term-table">
+                        <thead class="bg-gray-500">
+                            <tr>
+                                <th>Symbol</th>
+                                <th>Latest Price</th>
+                                <th>Recommendation</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="long-term-body">
+                            {% for stock in recommendations_kmeans %}
+                            <tr class="recommendation-row" data-recommendation="{{ stock.recommendation }}">
+                                <td><a href="/stock/{{ stock.symbol }}">{{ stock.symbol }}</a></td>
+                                <td>$ {{ "%.2f"|format(stock.close) }}</td>
+                                <td class="{{ stock.recommendation | lower | replace(' ', '-') }}">{{ stock.recommendation }}</td>
+                                <td>
+                                    <a href="/trade_stocks" class="details-btn">Trade</a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Short-Term Recommendations Tab -->
+            <div class="tab-pane fade" id="short-term">
+                <div class="mb-4 flex justify-center space-x-4">
+                    <label for="indicatorFilter">Indicator:</label>
+                    <select id="indicatorFilter" class="border p-2">
+                        <option value="">All</option>
+                        <option value="Bollinger Bands">Bollinger Bands</option>
+                        <option value="MACD">MACD</option>
+                    </select>
+
+                    <label for="signalFilter">Signal:</label>
+                    <select id="signalFilter" class="border p-2">
+                        <option value="">All</option>
+                        <option value="Buy">Buy</option>
+                        <option value="Sell">Sell</option>
+                        <option value="Hold">Hold</option>
+                    </select>
+                </div>
+
+                <div class="scrollable-table mx-auto border rounded-lg shadow-md bg-white">
+                    <table class="table table-striped">
+                        <thead class="bg-gray-800 text-white">
+                            <tr>
+                                <th>Stock Symbol</th>
+                                <th>Closing Price</th>
+                                <th>Recommendation</th>
+                                <th>Indicator Used</th>
+                                <th>Order</th>
+                            </tr>
+                        </thead>
+                        <tbody id="short-term-table">
+                            {% for stock in recommendations_indicators %}
+                            <tr class="stock-row" data-indicator="{{ stock.indicator_used }}" data-signal="{{ stock.recommendation }}">
+                                <td><a href="/stock/{{ stock.symbol }}">{{ stock.symbol }}</a></td>
+                                <td>{{ stock.close }}</td>
+                                <td>
+                                    <span class="{% if stock.recommendation == 'Buy' %}buy-text{% elif stock.recommendation == 'Sell' %}sell-text{% endif %}">
+                                        {{ stock.recommendation }}
+                                    </span>
+                                </td>
+                                <td>{{ stock.indicator_used }}</td>
+                                <td>
+                                    <a href="/trade_stocks" class="details-btn">Trade</a>
+                                </td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="4" class="text-center">No recommendations available</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            // Long-Term Recommendations Filtering
+            $(".filter-btn").on("click", function () {
+                let filter = $(this).attr("data-filter");
+                let $rows = $("#long-term-body .recommendation-row");
+
+                if (filter === "All") {
+                    $rows.show();
+                } else {
+                    $rows.hide().filter(function () {
+                        return $(this).data("recommendation") === filter;
+                    }).show();
+                }
+            });
+
+            // Short-Term Recommendations Filtering
+            $("#indicatorFilter, #signalFilter").on("change", function () {
+                const indicatorFilter = $("#indicatorFilter").val();
+                const signalFilter = $("#signalFilter").val();
+                const $rows = $("#short-term-table .stock-row");
+
+                $rows.each(function () {
+                    const indicator = $(this).data("indicator");
+                    const signal = $(this).data("signal");
+                    let showRow = true;
+
+                    if (indicatorFilter && indicator !== indicatorFilter) showRow = false;
+                    if (signalFilter && signal !== signalFilter) showRow = false;
+
+                    $(this).toggle(showRow);
+                });
+            });
+        });
+    </script>
+
+</body>
+</html>

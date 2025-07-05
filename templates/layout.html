@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.5.0/dist/semantic.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.5.0/dist/semantic.min.js"></script>
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../static/css/trade_stocks.css">
+    <link rel="stylesheet" href="../static/css/dashboard.css">
+     <!-- External CSS -->
+    
+    <!-- Bootstrap Css -->
+    <link href="../static/css/bootstrap.min.css" id="bootstrap-style" rel="stylesheet" type="text/css" />
+    <!-- Icons Css -->
+    <link href="../static/css/icons.min.css" rel="stylesheet" type="text/css" />
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.js"></script>
+    <!-- ApexCharts CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
+    <!-- jQuery (Required for Bootstrap Tabs) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Bootstrap JS (Required for Tabs) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+
+
+    <title>stocks</title>
+</head>
+<body>
+    <nav class="bg-gray-800 p-4 shadow-md">
+        <div class="container mx-auto flex justify-between items-center">
+          <div class="flex space-x-4">
+            <a href="/index" class="text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-gray-700">Stocks</a>
+            <a href="/strategies" class="text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-gray-700">Strategies</a>
+            <a href="/orders" class="text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-gray-700">Ordered by Algorithms</a>
+            <a href="/trade_stocks" class="text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-gray-700"><i class="fas fa-dollar-sign mr-2"></i>Trade manually</a>
+            <a href="/portfolio_dashboard" class="text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-gray-700"><i class="fas fa-briefcase mr-2"></i>Portfolio Insights</a>
+            <a href="/recommendations" class="text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-gray-700"><i class="fas fa-thumbs-up mr-2"></i>Recommendation</a>
+            <a href="/transaction_history" class="text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-gray-700">History</a>
+            <a href="/predictions" class="text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-gray-700">Predict Future</a>
+          </div>
+          <div class="flex space-x-4">
+            <a href="/logout" class="text-white px-3 py-2 rounded-md text-sm font-medium bg-red-500 hover:bg-red-600">Logout</a>
+          </div>
+        </div>
+      </nav>
+<br>
+      <div class="ui container">
+        {% block content %}
+        {% endblock %}
+    </div>
+</body>
+</html>

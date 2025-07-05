@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Recommendations</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f9fafb; }
+        .buy-text { color: #10b981; font-weight: bold; } /* Green for Buy */
+        .sell-text { color: #ef4444; font-weight: bold; } /* Red for Sell */
+        .scrollable-table { max-height: 400px; overflow-y: auto; display: block; } /* Fixed height */
+    </style>
+</head>
+<body style="text-align: center;">
+
+    {% include 'navbar.html' %}
+
+    <br>
+    <div class="container mx-auto p-4">
+        <h1 class="text-3xl font-bold mb-6">Stock Recommendations</h1>
+
+        <!-- Filters -->
+        <div class="mb-4 flex justify-center space-x-4">
+            <label for="indicatorFilter">Indicator:</label>
+            <select id="indicatorFilter" class="border p-2">
+                <option value="">All</option>
+                <option value="Bollinger Bands">Bollinger Bands</option>
+                <option value="MACD">MACD</option>
+            </select>
+
+            <label for="signalFilter">Signal:</label>
+            <select id="signalFilter" class="border p-2">
+                <option value="">All</option>
+                <option value="Buy">Buy</option>
+                <option value="Sell">Sell</option>
+                <option value="Hold">Hold</option>
+            </select>
+        </div>
+
+        <!-- Table -->
+        <div class="scrollable-table mx-auto border rounded-lg shadow-md bg-white">
+            <table class="min-w-full">
+                <thead class="bg-gray-800 text-white">
+                    <tr>
+                        <th class="py-2 px-4">Stock Symbol</th>
+                        <th class="py-2 px-4">Closing Price</th>
+                        <th class="py-2 px-4">Recommendation</th>
+                        <th class="py-2 px-4">Indicator Used</th>
+                    </tr>
+                </thead>
+                <tbody id="stock-table" class="text-gray-700">
+                    {% for stock in recommendations %}
+                        <tr class="stock-row" data-indicator="{{ stock.indicator_used }}" data-signal="{{ stock.recommendation }}">
+                            <td class="py-2 px-4 border">{{ stock.symbol }}</td>
+                            <td class="py-2 px-4 border">{{ stock.close }}</td>
+                            <td class="py-2 px-4 border">
+                                <span class="{% if stock.recommendation == 'Buy' %}buy-text{% elif stock.recommendation == 'Sell' %}sell-text{% endif %}">
+                                    {{ stock.recommendation }}
+                                </span>
+                            </td>
+                            <td class="py-2 px-4 border">{{ stock.indicator_used }}</td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="4" class="py-2 px-4 border text-center">No recommendations available</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('indicatorFilter').addEventListener('change', filterTable);
+        document.getElementById('signalFilter').addEventListener('change', filterTable);
+
+        function filterTable() {
+            const indicatorFilter = document.getElementById('indicatorFilter').value;
+            const signalFilter = document.getElementById('signalFilter').value;
+            const rows = document.querySelectorAll('.stock-row');
+
+            rows.forEach(row => {
+                const indicator = row.getAttribute('data-indicator');
+                const signal = row.getAttribute('data-signal');
+                let showRow = true;
+
+                if (indicatorFilter && indicator !== indicatorFilter) showRow = false;
+                if (signalFilter && signal !== signalFilter) showRow = false;
+
+                row.style.display = showRow ? '' : 'none';
+            });
+        }
+    </script>
+</body>
+</html>

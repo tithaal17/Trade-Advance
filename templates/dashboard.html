@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.5.0/dist/semantic.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.5.0/dist/semantic.min.js"></script>
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../static/css/trade_stocks.css">
+    <link rel="stylesheet" href="../static/css/dashboard.css">
+     <!-- External CSS -->
+    
+    <!-- Bootstrap Css -->
+    <link href="../static/css/bootstrap.min.css" id="bootstrap-style" rel="stylesheet" type="text/css" />
+    <!-- Icons Css -->
+    <link href="../static/css/icons.min.css" rel="stylesheet" type="text/css" />
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.js"></script>
+    <!-- ApexCharts CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
+    <!-- jQuery (Required for Bootstrap Tabs) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Bootstrap JS (Required for Tabs) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+
+
+    <title>stocks</title>
+</head>
+<body>
+    {% include 'navbar.html' %}
+
+<br>
+      <div class="ui container">
+
+        <!-- Portfolio Overview Header -->
+        <div class="row">
+            <div class="col-lg-12">
+                <h2 class="dashboard-title">Portfolio Dashboard</h2>
+            </div>
+        </div>
+        <br>
+
+        <div class="row">
+            <div class="col-md-6 col-xl-3">
+                <div class="portfolio-box">
+                    <div class="portfolio-content">
+                        <div class="float-right mt-2">
+                            <div id="total-investment-chart"></div>
+                        </div>
+                        <div>
+                            <h4 class="mb-1 mt-1">$ <span>{{ "%.2f"|format(cashBalance) }}</span></h4>
+                            <p class="text-muted mb-0">Cash Balance</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-xl-3">
+                <div class="portfolio-box">
+                    <div class="portfolio-content">
+                        <div class="float-right mt-2">
+                            <div id="current-value-chart"></div>
+                        </div>
+                        <div>
+                            <h4 class="mb-1 mt-1">$ <span id="current-value">{{ "%.2f"|format(totalPortfolioValue) }}</span></h4>
+                            <p class="text-muted mb-0">Total Portfolio Value</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-xl-3">
+                <div class="portfolio-box">
+                    <div class="portfolio-content">
+                        <div class="float-right mt-2">
+                            <div id="pnl-chart"></div>
+                        </div>
+                        <div>
+                            <h4 class="mb-1 mt-1" style="color:#34c38f;" id="unrealized-pnl">
+                                <span>{{ "%.2f"|format(totalInvestment) }}</span>
+                            </h4>
+                        </div>
+                        <p class="text-muted mb-0">Total Investment</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-xl-3">
+                <div class="portfolio-box">
+                    <div class="portfolio-content">
+                        <div class="float-right mt-2">
+                            <div id="growth-chart"></div>
+                        </div>
+                        <div>
+                            <h4 class="mb-1 mt-1" style="color:#34c38f;" id="growth">
+                                <span>{{ "%.2f"|format(totalInvestment + totalUnrealizedPNL) }}</span> 
+                            </h4>
+                        </div>
+                        <p class="text-muted mb-0">Current Market Value</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="charts-container">
+            <!-- Unrealized P&L Breakdown -->
+            <div class="chart-box small-chart">
+                <h5 class="chart-title">📊 Unrealized P&L</h5>
+                <div id="unrealized-pnl-chart"></div>
+            </div>
+
+            <!-- Asset Type Breakdown -->
+            <div class="chart-box small-chart">
+                <h5 class="chart-title">📌 Asset Type</h5>
+                <div id="asset-type-chart"></div>
+            </div>
+        </div>
+
+        <br>
+        <!-- Tabs Section -->
+        <div class="row">
+            <div class="col-lg-12">
+                <ul class="nav nav-tabs" id="portfolioTabs">
+                    <li class="nav-item">
+                        <a class="nav-link active" data-bs-toggle="tab" href="#holdings">Holdings</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-bs-toggle="tab" href="#performance">Performance Metrics</a>
+                    </li>
+                </ul>
+                
+                <div class="tab-content">
+                    <!-- Holdings Tab -->
+                    <div class="tab-pane fade show active" id="holdings">
+                        <div class="holdings-box">
+                            <h4 class="table-title">Your Holdings</h4>
+                            <table class="table table-hover holdings-table">
+                                <thead>
+                                    <tr>
+                                        <th>Ticker</th>
+                                        <th>Company Name</th>
+                                        <th>Shares</th>
+                                        <th>Avg Cost</th>
+                                        <th>LTP</th>
+                                        <th>Invested</th>
+                                        <th>P&L</th>
+                                        <th>Net Change</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for c in holdings %}
+                                    <tr>
+                                        <td class="company-name">{{ c.CompanySymbol }}</td>
+                                        <td class="company-name"><a href="/stock/{{ c.CompanySymbol }}">{{ c.CompanyName }}</a></td>
+                                        <td>{{ c.NumberShares }}</td>
+                                        <td>$ {{ "%.2f"|format(c.AverageCost) }}</td>
+                                        <td>$ {{ "%.2f"|format(c.MarketValue / c.NumberShares if c.NumberShares > 0 else 0) }}</td>
+                                        <td>$ {{ "%.2f"|format(c.InvestmentAmount) }}</td>
+                                        <td class="pnl" 
+                                            style="color: {% if c.UnrealizedPNL >= 0 %}#34c38f{% else %}#f46a6a{% endif %};">
+                                            {% if c.UnrealizedPNL >= 0 %}+{% endif %}$ {{ "%.2f"|format(c.UnrealizedPNL) }}
+                                        </td>
+                                        <td class="net-change" 
+                                            style="color: {% if c.UnrealizedPNLPercent >= 0 %}#34c38f{% else %}#f46a6a{% endif %};">
+                                            {% if c.UnrealizedPNLPercent >= 0 %}+{% endif %}{{ "%.2f"|format(c.UnrealizedPNLPercent) }} %
+                                        </td>
+                                        <td>
+                                            <a href="/trade_stocks" class="details-btn">Trade</a>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+
+                    <!-- Performance Metrics Tab -->
+                    <div class="tab-pane fade" id="performance">
+                        <div class="performance-box">
+                            <h4 class="table-title">📊 Portfolio Performance Metrics</h4>
+                            <div class="performance-metrics-container">
+                                <ul class="performance-metrics left-metrics">
+                                    <li><i class="fas fa-chart-line"></i> <strong>CAGR:</strong> <span class="metric-value" style="color: {{ 'red' if CAGR < 0 else 'black' }};">{{ "%.2f"|format(CAGR) }}%</span></li>
+                                    <li>
+                                        <i class="fas fa-arrow-down"></i> <strong>Max Drawdown:</strong> 
+                                        <span class="metric-value" style="color: {{ 'red' if MaxDrawdown < 0 else 'black' }};">
+                                            {{ "%.2f"|format(MaxDrawdown) }}%
+                                        </span>
+                                    </li>
+                                    <li><i class="fas fa-calculator"></i> <strong>Sharpe Ratio:</strong> <span class="metric-value">{{ "%.2f"|format(SharpeRatio) }}</span></li>
+                                    <li><i class="fas fa-trophy"></i> <strong>Win Rate:</strong> <span class="metric-value text-success">{{ WinRate }}%</span></li>
+                                </ul>
+                                <ul class="performance-metrics right-metrics">
+                                    <li>
+                                        <i class="fas fa-money-bill-wave"></i> <strong>Unrealized P&L:</strong> 
+                                        <span class="metric-value" style="color: {{ 'green' if totalUnrealizedPNL >= 0 else 'red' }};">
+                                            {% if totalUnrealizedPNL >= 0 %}+{% endif %}{{ "%.2f"|format(totalUnrealizedPNL) }}
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <i class="fas fa-chart-area"></i> <strong>Daily Change (%):</strong> 
+                                        <span class="metric-value" style="color: {{ 'green' if dailyChangePercent >= 0 else 'red' }};">
+                                            {% if dailyChangePercent >= 0 %}+{% endif %}{{ "%.2f"|format(dailyChangePercent) }}%
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <i class="fas fa-signal"></i> <strong>Growth (%):</strong> 
+                                        <span class="metric-value" style="color: {{ 'green' if totalUnrealizedPNLPercent >= 0 else 'red' }};">
+                                            {% if totalUnrealizedPNLPercent >= 0 %}+{% endif %}{{ "%.2f"|format(totalUnrealizedPNLPercent) }}%
+                                        </span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                
+                    
+                </div>
+            </div>
+        </div>
+
+<script src="../static/js/pages/dashboard.init.js"></script>
+<!-- Load ApexCharts for Pie Chart -->
+<script src="../static/libs/apexcharts/apexcharts.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        loadUnrealizedPNLChart();
+        loadAssetTypeChart();
+    });
+
+    function loadUnrealizedPNLChart() {
+        var pnlPositive = 0;
+        var pnlNegative = 0;
+
+        {% for c in holdings %}
+            {% if c.UnrealizedPNL >= 0 %}
+                pnlPositive += {{ c.UnrealizedPNL }};
+            {% else %}
+                pnlNegative += {{ -c.UnrealizedPNL }};
+            {% endif %}
+        {% endfor %}
+
+        var options = {
+            series: [pnlPositive, pnlNegative],
+            chart: { type: 'pie', height: 340, width: 340 },
+            labels: ['Profitable Holdings', 'Losing Holdings'],
+            colors: ['#34c38f', '#f46a6a']
+        };
+
+        var chart = new ApexCharts(document.querySelector("#unrealized-pnl-chart"), options);
+        chart.render();
+    }
+
+    function loadAssetTypeChart() {
+        var assetData = [{{ assetCounts["Stocks"] }}, {{ assetCounts["ETFs"] }}, {{ assetCounts["Index Funds"] }}];
+
+        var options = {
+            series: assetData,
+            chart: { type: 'pie', height: 300, width: 300 },
+            labels: ['Stocks', 'ETFs', 'Index Funds'],
+            colors: ['#ff7f50', '#8a2be2', '#228b22']
+        };
+
+        var chart = new ApexCharts(document.querySelector("#asset-type-chart"), options);
+        chart.render();
+    }
+</script>
+  
+
+</div>
+</body>
+</html>
+
